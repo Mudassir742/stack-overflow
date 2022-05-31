@@ -127,3 +127,32 @@ exports.editQuestion = async (req, res) => {
     return res.status(500).json({ error: "unexpected server error" });
   }
 };
+
+exports.editQuestion = async (req, res) => {
+  try {
+    const { userId } = req.user;
+    const { questionId, operation } = req.body;
+
+    if (!userId || !questionId || operation) {
+      return res.status(400).json({ error: "missing inputs" });
+    }
+
+    let updateVoteCount;
+    if (operation === "inc") {
+      updateVoteCount = await Question.updateOne(
+        { _id: questionId, userId: userId },
+        { $inc: { votes: 1 } }
+      );
+    } else {
+      updateVoteCount = await Question.updateOne(
+        { _id: questionId, userId: userId },
+        { $inc: { votes: -1 } }
+      );
+    }
+
+    return res.status(201).json({ data: "vote updated!" });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ error: "unexpected server error" });
+  }
+};
