@@ -20,7 +20,7 @@ const answerSchema = mongoose.Schema(
       type: Number,
       default: 0,
     },
-    isUseful: {
+    isUsefull: {
       type: Boolean,
       default: false,
     },
