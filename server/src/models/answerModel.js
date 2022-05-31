@@ -7,21 +7,18 @@ const questionSchema = mongoose.Schema(
       require: [true, "missing owner id"],
       ref: "user",
     },
-    title: {
-      type: String,
-      require: [true, "Enter question title"],
+    questionId: {
+      type: mongoose.Schema.Types.ObjectId,
+      require: [true, "missing question id"],
+      ref: "question",
     },
     description: {
       type: String,
-      require: [true, "enter question description"],
+      require: [true, "enter answer description"],
     },
     votes: {
       type: Number,
       default: 0,
-    },
-    tags: {
-      type: Array,
-      default: [],
     },
   },
   { timestamps: true }
