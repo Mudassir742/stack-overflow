@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const questionSchema = mongoose.Schema(
+const answerSchema = mongoose.Schema(
   {
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -20,8 +20,12 @@ const questionSchema = mongoose.Schema(
       type: Number,
       default: 0,
     },
+    isUseful: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("question", questionSchema);
+module.exports = mongoose.model("answer", answerSchema);
