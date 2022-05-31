@@ -128,7 +128,7 @@ exports.editQuestion = async (req, res) => {
   }
 };
 
-exports.editQuestion = async (req, res) => {
+exports.updateVotes = async (req, res) => {
   try {
     const { userId } = req.user;
     const { questionId, operation } = req.body;
