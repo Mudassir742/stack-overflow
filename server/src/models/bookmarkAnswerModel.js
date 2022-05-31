@@ -14,7 +14,7 @@ const bookmarkAnswerSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      require: [true, "missing answer id"],
+      require: [true, "missing status"],
     },
   },
   { timestamps: true }
