@@ -152,21 +152,21 @@ exports.updateAnswerVotes = async (req, res) => {
   }
 };
 
-exports.markAnswerUsefull = async (req, res) => {
+exports.updateAnswerUsefullness = async (req, res) => {
   try {
     const { userId } = req.user;
-    const { answerId } = req.body;
+    const { answerId, isAnswerUsefull } = req.body;
 
-    if (!userId || !answerId) {
+    if (!userId || !answerId | !isAnswerUsefull) {
       return res.status(400).json({ error: "missing inputs" });
     }
 
     const markAnswer = await Answer.updateOne(
       { _id: answerId, userId: userId },
-      { $set: { isUsefull: true } }
+      { $set: { isUsefull: !isAnswerUsefull } }
     );
 
-    return res.status(201).json({ data: "answer marker usefull" });
+    return res.status(201).json({ data: "answer marker updated" });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ error: "unexpected server error" });

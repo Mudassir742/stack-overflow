@@ -27,4 +27,16 @@ router.post("/create-answer", authenticateToken, answerController.addAnswer);
 
 router.post("/edit-answer", authenticateToken, answerController.editAnswer);
 
+router.post(
+  "/update-answer-vote",
+  authenticateToken,
+  answerController.updateAnswerVotes
+);
+
+router.post(
+  "/update-answer-usefull",
+  authenticateToken,
+  answerController.updateAnswerUsefullness
+);
+
 module.exports = router;

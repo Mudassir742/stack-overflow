@@ -38,4 +38,10 @@ router.post(
   questionController.editQuestion
 );
 
+router.post(
+  "/update-question-vote",
+  authenticateToken,
+  questionController.updateVotes
+);
+
 module.exports = router;
