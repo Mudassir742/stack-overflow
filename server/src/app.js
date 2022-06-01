@@ -2,8 +2,11 @@ const express = require("express");
 const cors = require("cors");
 
 const database = require("./config/database");
+
 const userRoute = require("./routes/userRoute");
-const blogRoute = require("./routes/blogRoute");
+const questionRoute = require("./routes/questionRoute");
+const answerRoute = require("./routes/answerRoute");
+const bookmarkRoute = require("./routes/bookmarkAnswerRoute");
 
 const app = express();
 
@@ -18,6 +21,8 @@ database.connect();
 
 // === || Routes || ===
 app.use("/api/user", userRoute);
-app.use("/api/blog", blogRoute);
+app.use("/api/question", questionRoute);
+app.use("/api/answer", answerRoute);
+app.use("/api/bookmark", bookmarkRoute);
 
 module.exports = app;
