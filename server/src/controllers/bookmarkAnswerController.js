@@ -46,3 +46,23 @@ exports.getBookmarkAnswerById = async (req, res) => {
     return res.status(500).json({ error: "unexpected server error" });
   }
 };
+
+exports.deleteBookmarkAnswer = async (req, res) => {
+  try {
+    const { userId } = req.user;
+    const { bookmarkAnswerId } = req.params;
+
+    if (!bookmarkAnswerId || !userId) {
+      return res.status(400).json({ error: "missing input" });
+    }
+
+    const isBookmarkAnswerDeleted = await Bookmark.deleteOne({
+      _id: bookmarkAnswerId,
+    });
+
+    return res.status(201).json({ data: "bookmark answer deleted" });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ error: "unexpected server error" });
+  }
+};
