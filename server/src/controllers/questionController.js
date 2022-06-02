@@ -82,9 +82,9 @@ exports.deleteQuestionById = async (req, res) => {
 exports.addQuestion = async (req, res) => {
   try {
     const { userId } = req.user;
-    const { title, description, tags } = req.body;
+    const { title, description } = req.body;
 
-    if ((!userId || !title || !description, !tags)) {
+    if (!userId || !title || !description) {
       return res.status(400).json({ error: "missing details" });
     }
 
@@ -92,7 +92,6 @@ exports.addQuestion = async (req, res) => {
       title: title,
       description: description,
       userId: userId,
-      tags: tags,
     });
 
     const saveQuestion = await newQuestion.save();

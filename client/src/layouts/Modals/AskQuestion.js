@@ -4,25 +4,41 @@ import { Modal, Form } from "react-bootstrap";
 
 import questionInstance from "../../axios/questionInstance";
 
-const AskQuestion = ({ showAsk, setShowAsk }) => {
-  const [questionDetail, setQuestionDetail] = useState([
-    { title: "", description: "" },
-  ]);
+//redux
+import { getToken } from "../../store/localStorage";
+
+const AskQuestion = ({ showAsk, setShowAsk, setReload }) => {
+  const token = getToken();
+
+  const [questionDetail, setQuestionDetail] = useState({
+    title: "",
+    description: "",
+  });
 
   const handleDetailChange = (e) => {
-    setQuestionDetail([...questionDetail, { [e.target.name]: e.target.value }]);
+    setQuestionDetail({ ...questionDetail, [e.target.name]: e.target.value });
     console.log(questionDetail);
   };
 
   const postQuestion = async (e) => {
     e.preventDefault();
     try {
-      // const postQuestionResponse = questionInstance.post("/create-question",{
-      //   title:questionDetail.title,
-      //   description:questionDetail.description
-      // })
+      const postQuestionResponse = await questionInstance.post(
+        "/create-question",
+        {
+          title: questionDetail.title,
+          description: questionDetail.description,
+        },
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      );
 
-      console.log(questionDetail.data.data);
+      console.log(postQuestionResponse);
+      setReload((prev) => !prev);
+      setShowAsk(false);
     } catch (error) {
       console.log(error.message);
     }
@@ -37,11 +53,21 @@ const AskQuestion = ({ showAsk, setShowAsk }) => {
         <Form>
           <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
             <Form.Label>Question : </Form.Label>
-            <Form.Control type="text" placeholder="How can I " name="title" />
+            <Form.Control
+              type="text"
+              placeholder="How can I "
+              name="title"
+              onChange={handleDetailChange}
+            />
           </Form.Group>
           <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
             <Form.Label>Detail</Form.Label>
-            <Form.Control as="textarea" rows={3} name="description" />
+            <Form.Control
+              as="textarea"
+              rows={3}
+              name="description"
+              onChange={handleDetailChange}
+            />
           </Form.Group>
         </Form>
       </Modal.Body>
@@ -49,7 +75,7 @@ const AskQuestion = ({ showAsk, setShowAsk }) => {
         <button className="btn" onClick={() => setShowAsk(false)}>
           Cancel
         </button>
-        <button className="btn ask px-4" onClick={() => setShowAsk(false)}>
+        <button className="btn ask px-4" onClick={postQuestion}>
           Ask
         </button>
       </Modal.Footer>

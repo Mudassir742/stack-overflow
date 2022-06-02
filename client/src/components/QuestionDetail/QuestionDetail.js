@@ -1,20 +1,57 @@
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import {
   IconArrowBarDown,
   IconArrowBarUp,
-  IconEditCircle,
 } from "@tabler/icons";
-import React, { useState } from "react";
 
 import AskQuestion from "../../layouts/Modals/AskQuestion";
 
-import { Form } from "react-bootstrap";
+import { Spinner, Form } from "react-bootstrap";
 
-const QuestionDetail = ({ questionId }) => {
+import { getToken } from "../../store/localStorage";
+import questionInstance from "../../axios/questionInstance";
+
+const QuestionDetail = () => {
   const [open, setOpen] = useState(false);
+  const token = getToken();
+  const [questionData, setQuestionData] = useState({});
+  const [questionLoading, setQuestionLoading] = useState(false);
+  const { questionId } = useParams();
+
+  useEffect(() => {
+    const getQuestionData = async () => {
+      setQuestionLoading(true);
+      try {
+        const questionResponse = await questionInstance.get(
+          `/get-question/${questionId}`,
+          {
+            headers: {
+              "x-access-token": token,
+            },
+          }
+        );
+
+        console.log(questionResponse.data.data);
+        setQuestionData(questionResponse.data.data);
+        setQuestionLoading(false);
+      } catch (error) {
+        console.log(error.message);
+        setQuestionLoading(false);
+      }
+    };
+
+    getQuestionData();
+  }, [token, questionId]);
 
   return (
     <>
-    <AskQuestion showAsk={open} setShowAsk = {setOpen} answer={true}/>
+      <AskQuestion showAsk={open} setShowAsk={setOpen} answer={true} />
+      <div className="spinner-container">
+        {questionLoading && (
+          <Spinner animation="border" variant="warning"></Spinner>
+        )}
+      </div>
       <div className="question-detail-section">
         <div className="question-detail-container">
           <div className="question-detail-header">
@@ -30,10 +67,7 @@ const QuestionDetail = ({ questionId }) => {
             >
               Question:
             </h3>
-            <h4 className="question-heading">
-              How can i access the /var/www folder from VM instance (SSH
-              console) in Google Cloud?
-            </h4>
+            <h4 className="question-heading">{questionData?.title}</h4>
             <div className="time">
               <span>Asked</span>
               <span className="mx-2" style={{ fontSize: ".9rem" }}>
@@ -42,25 +76,13 @@ const QuestionDetail = ({ questionId }) => {
             </div>
           </div>
           <div className="divider my-4"></div>
-          <div className="question-detail-body w-100 d-flex  justify-content-between">
+          <div className="question-detail-body w-100 d-flex">
             <div className="votes-btn d-flex flex-column align-items-center mx-2">
               <IconArrowBarUp />
-              <span className="my-2">0</span>
+              <span className="my-2">{questionData?.votes}</span>
               <IconArrowBarDown />
             </div>
-            <p className="mx-2">
-              I'm asking for help on an issue I've been having while getting
-              some VM instances/servers back online. the problem is that a
-              person who was working before at our company, set up the VM
-              instances before, left us some documentation, where it ask us to
-              Go to Google Cloud Compute Engine VM Instances and find 2 VM
-              instances called "gap-mongo" and "gap-node". When we went into
-              Compute EngineVM Instances, nothing was there (seems like the
-              instances got removed or moved somewhere else, but we can't see it
-              in our VM instance list), So we decided to start creating a new
-              the 2 VM instances ("gap-mongo" and "gap-node") from scratch and
-              follow the documentation provided.
-            </p>
+            <p className="mx-2">{questionData?.description}</p>
           </div>
           <div className="divider my-4"></div>
 
@@ -77,7 +99,7 @@ const QuestionDetail = ({ questionId }) => {
                   borderRadius: "8px",
                 }}
               >
-                Total Answers 2
+                Total Answers {questionData?.totalAnswers}
               </h4>
               <Form.Select
                 aria-label="Default select example"
@@ -88,96 +110,9 @@ const QuestionDetail = ({ questionId }) => {
                 <option value="2">Date Created (old first)</option>
               </Form.Select>
             </div>
-            <div className="answer-section">
-              <div className="divider my-4"></div>
-              <div className="answer-content d-flex  justify-content-between">
-                <div className="votes-btn d-flex flex-column align-items-center mx-3">
-                  <IconArrowBarUp />
-                  <span className="my-2">0</span>
-                  <IconArrowBarDown />
-                </div>
-
-                <div className="answer-body w-100">
-                  <p
-                    className="answer-heading"
-                    style={{ width: "90%", marginLeft: "3rem" }}
-                  >
-                    you can use "useRef" to scroll to that position with click
-                    event or try useEffect for scroll to that position after
-                    component rendered. Lorem ipsum dolor sit, amet consectetur
-                    adipisicing elit. Illo veritatis optio quia nisi atque omnis
-                    consequuntur possimus nam sint tenetur? Accusamus quod, sit
-                    repudiandae corrupti pariatur in repellendus sed distinctio.
-                  </p>
-                  <div
-                    className="answer-btns d-flex justify-content-between"
-                    style={{ marginTop: "2rem", marginLeft: "3rem" }}
-                  >
-                    <div className="btn-groups">
-                      <button className="btn btn-danger">Delete</button>
-                      <button className="btn btn-info mx-3">Useful</button>
-                      <button className="btn btn-success">BookMark</button>
-                    </div>
-                    <div
-                      style={{
-                        width: "60px",
-                        height: "60px",
-                        cursor: "pointer",
-                        borderRadius: "50%",
-                      }}
-                    >
-                      <IconEditCircle size={40} color="#F67328" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="answer-section">
-              <div className="divider my-4"></div>
-              <div className="answer-content d-flex  justify-content-between">
-                <div className="votes-btn d-flex flex-column align-items-center mx-3">
-                  <IconArrowBarUp />
-                  <span className="my-2">0</span>
-                  <IconArrowBarDown />
-                </div>
-
-                <div className="answer-body w-100">
-                  <p
-                    className="answer-heading"
-                    style={{ width: "90%", marginLeft: "3rem" }}
-                  >
-                    you can use "useRef" to scroll to that position with click
-                    event or try useEffect for scroll to that position after
-                    component rendered. Lorem ipsum dolor sit, amet consectetur
-                    adipisicing elit. Illo veritatis optio quia nisi atque omnis
-                    consequuntur possimus nam sint tenetur? Accusamus quod, sit
-                    repudiandae corrupti pariatur in repellendus sed distinctio.
-                  </p>
-                  <div
-                    className="answer-btns d-flex justify-content-between"
-                    style={{ marginTop: "2rem", marginLeft: "3rem" }}
-                  >
-                    <div className="btn-groups">
-                      <button className="btn btn-danger">Delete</button>
-                      <button className="btn btn-info mx-3">Useful</button>
-                      <button className="btn btn-success">BookMark</button>
-                    </div>
-                    <div
-                      style={{
-                        width: "60px",
-                        height: "60px",
-                        cursor: "pointer",
-                        borderRadius: "50%",
-                      }}
-                    >
-                      <IconEditCircle size={40} color="#F67328" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
             <div className="divider my-4"></div>
-            <h4 onClick={()=>setOpen(true)}
+            <h4
+              onClick={() => setOpen(true)}
               style={{
                 textAlign: "center",
                 marginBottom: "1rem",

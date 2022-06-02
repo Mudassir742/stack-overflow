@@ -6,6 +6,7 @@ import Login from "../pages/auth/Login";
 import Signup from "../pages/auth/Signup";
 import Main from "../pages/main/Main";
 import Home from "../pages/app/Home";
+import QuestionDetailPage from "../pages/app/QuestionDetail";
 
 //protected
 import LoggedInProtection from "./LoggedInProtection";
@@ -56,11 +57,27 @@ export default function Router() {
     },
     {
       path: "main",
-      element: <Main />,
+      element: (
+        <LoggedInProtection redirectTo={"/"}>
+          <Main />
+        </LoggedInProtection>
+      ),
       children: [
         {
           path: "home",
-          element: <Home />,
+          element: (
+            <LoggedInProtection redirectTo={"/"}>
+              <Home />
+            </LoggedInProtection>
+          ),
+        },
+        {
+          path: "question-detail/:questionId",
+          element: (
+            <LoggedInProtection redirectTo={"/"}>
+              <QuestionDetailPage />
+            </LoggedInProtection>
+          ),
         },
       ],
     },

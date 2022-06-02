@@ -2,7 +2,7 @@ import React from "react";
 
 const QuestionList = ({ question }) => {
   return (
-    <div className="question-content-container bg-white shadow w-100 my-4 py-5 px-3 d-flex justify-content-between">
+    <div className="question-content-container bg-white shadow w-100 my-4 py-5 px-3 d-flex">
       <div className="left-col mx-3">
         <div className="votes">
           <span>{question?.votes}</span>

@@ -5,21 +5,43 @@ const express = require("express");
 
 const router = express.Router();
 
-router.get("/get-questions", questionController.getQuestions);
-router.get("/get-question/:questionId", questionController.getQuestionById);
+router.get(
+  "/get-questions",
+  authenticateToken,
+  questionController.getQuestions
+);
+router.get(
+  "/get-question/:questionId",
+  authenticateToken,
+  questionController.getQuestionById
+);
 router.get(
   "/get-user-questions",
+  authenticateToken,
   questionController.getAllQuestionsOfSpecificUser
 );
 
 router.delete(
   "/delete-question/:questionId",
+  authenticateToken,
   questionController.deleteQuestionById
 );
 
-router.post("/create-question", questionController.addQuestion);
-router.post("/edit-question", questionController.editQuestion);
+router.post(
+  "/create-question",
+  authenticateToken,
+  questionController.addQuestion
+);
+router.post(
+  "/edit-question",
+  authenticateToken,
+  questionController.editQuestion
+);
 
-router.post("/update-question-vote", questionController.updateVotes);
+router.post(
+  "/update-question-vote",
+  authenticateToken,
+  questionController.updateVotes
+);
 
 module.exports = router;
