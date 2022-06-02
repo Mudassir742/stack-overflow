@@ -1,5 +1,6 @@
 import {
   SIGN_IN_SUCCESS,
+  SIGN_UP_SUCCESS,
   SIGN_OUT_SUCCESS,
   LOAD_PROFILE_SUCCESS,
 } from "../action-types";
@@ -7,48 +8,49 @@ import {
 const INITIAL_STATE = {
   isSignedIn: false,
   userID: "",
-  firstName: "",
-  lastName:"",
-  role: "",
-  gender:"",
-  email:""
+  name: "",
+  email: "",
 };
 
 const authReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case SIGN_IN_SUCCESS:
-
       return {
         ...state,
         isSignedIn: true,
-        firstName: action.payload.firstName,
-        lastName:action.payload.lastName,
+        name: action.payload.name,
         userID: action.payload._id,
-        gender: action.payload.gender,
         email: action.payload.email,
-        role:action.payload.role
+      };
+    case SIGN_UP_SUCCESS:
+      return {
+        ...state,
+        isSignedIn: true,
+        name: action.payload.name,
+        userID: action.payload._id,
+        email: action.payload.email,
       };
     case LOAD_PROFILE_SUCCESS:
       return {
         ...state,
         isSignedIn: true,
         firstName: action.payload.firstName,
-        lastName:action.payload.lastName,
+        lastName: action.payload.lastName,
         userID: action.payload._id,
         gender: action.payload.gender,
         email: action.payload.email,
-        role:action.payload.role
+        role: action.payload.role,
       };
     case SIGN_OUT_SUCCESS:
       return {
         ...state,
         isSignedIn: false,
         firstName: "",
-        lastName:"",
+        lastName: "",
         userID: "",
         gender: "",
         email: "",
-        role:""
+        role: "",
       };
     default:
       return { ...state };

@@ -12,8 +12,22 @@ const Header = () => {
       <div className="header-content w-100 d-flex align-items-center justify-content-between">
         <div className="logo d-flex align-items-center">
           <img src={Logo} alt="stackunderflow" />
-          <h5 className="ml-4">Queryunderflow<sapn style={{fontSize:"3rem",color:"#F67328"}}>.</sapn></h5>
-          <Link to="/" activeClassName='is-active' style={{ textDecoration: "none", color: "#F67328",fontWeight:'bold',marginLeft:'1.2rem'}}>Home</Link>
+          <h5 className="ml-4">
+            Queryunderflow
+            <sapn style={{ fontSize: "3rem", color: "#F67328" }}>.</sapn>
+          </h5>
+          <Link
+            to="/main/home"
+            activeClassName="is-active"
+            style={{
+              textDecoration: "none",
+              color: "#F67328",
+              fontWeight: "bold",
+              marginLeft: "1.2rem",
+            }}
+          >
+            Home
+          </Link>
         </div>
         <div className="form-group">
           <input
@@ -63,13 +77,6 @@ const Header = () => {
               </ul>
             </div>
           </div>
-          <div className="vr mx-4"></div>
-          <Link to="/login" className="link" style={{ textDecoration: "none", color: "gray" }}>
-            LogIn
-          </Link>
-          <Link to="/signup" className="link link2" style={{ textDecoration: "none", color: "gray" }}>
-            SignUp
-          </Link>
         </div>
       </div>
     </header>
