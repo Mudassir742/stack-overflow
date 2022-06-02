@@ -12,17 +12,51 @@ import bookmarkInstance from "../../axios/bookmarkInstance";
 import answerInstance from "../../axios/answerInstance";
 import { getToken } from "../../store/localStorage";
 
-const AnswerDetail = ({ answer, isAnsBookmarked }) => {
+const AnswerDetail = ({ answer }) => {
   const token = getToken();
   const [answerVote, setAnswerVote] = useState(answer?.votes);
-  const [isBookmarked, setIsBookmarked] = useState(isAnsBookmarked);
+  const [bookmarkLoading, setBookmarkLoading] = useState(false);
+  const [bookmarkAnswers, setBookmarkAnswers] = useState([]);
+  const [isBookmarked, setIsBookmarked] = useState(false);
 
   useEffect(() => {
     setAnswerVote(answer?.votes);
-    setIsBookmarked(isAnsBookmarked);
   }, [answer]);
 
-  const [bookmarkLoading, setBookmarkLoading] = useState(false);
+  useEffect(() => {
+    const getBookmarkData = async () => {
+      try {
+        const bookmarkResponse = await bookmarkInstance.get(
+          `/get-bookmark-answers`,
+          {
+            headers: {
+              "x-access-token": token,
+            },
+          }
+        );
+
+        console.log(bookmarkResponse.data.data);
+        setBookmarkAnswers(bookmarkResponse.data.data);
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    getBookmarkData();
+  }, [token, answer]);
+
+  useEffect(() => {
+    const checkBookmark = () => {
+      for (let i = 0; i <= bookmarkAnswers.length; i++) {
+        if (answer._id === bookmarkAnswers[i]?.answerId._id)
+          setIsBookmarked(true);
+        return;
+      }
+      setIsBookmarked(false);
+      return;
+    };
+    checkBookmark();
+  }, [answer]);
 
   const bookmarkAnswer = async (e) => {
     e.preventDefault();
@@ -40,7 +74,6 @@ const AnswerDetail = ({ answer, isAnsBookmarked }) => {
         }
       );
       setBookmarkLoading(false);
-      setIsBookmarked(true)
       console.log(bookmarkResponse.data.data);
     } catch (err) {
       setBookmarkLoading(false);
@@ -64,7 +97,6 @@ const AnswerDetail = ({ answer, isAnsBookmarked }) => {
         }
       );
       setBookmarkLoading(false);
-      setIsBookmarked(false)
       console.log(bookmarkResponse.data.data);
     } catch (err) {
       setBookmarkLoading(false);
@@ -128,13 +160,14 @@ const AnswerDetail = ({ answer, isAnsBookmarked }) => {
             >
               <div className="btn-groups">
                 {/* <button className="btn btn-danger">Delete</button> */}
-                {!isBookmarked ? (
+                {!isBookmarked && (
                   <button className="btn btn-success" onClick={bookmarkAnswer}>
                     BookMark
                   </button>
-                ) : (
+                )}
+                {isBookmarked && (
                   <button
-                    className="btn btn-success"
+                    className="btn btn-warning"
                     onClick={removeBookmarkAnswer}
                   >
                     Un-Bookmark

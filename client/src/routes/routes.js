@@ -7,6 +7,7 @@ import Signup from "../pages/auth/Signup";
 import Main from "../pages/main/Main";
 import Home from "../pages/app/Home";
 import QuestionDetailPage from "../pages/app/QuestionDetail";
+import ProfilePage from "../pages/app/Profile";
 
 //protected
 import LoggedInProtection from "./LoggedInProtection";
@@ -16,6 +17,7 @@ import LoggedOutProtection from "./LoggedOutProtection";
 import { getToken, deleteToken } from "../store/localStorage";
 import { loadProfile } from "../store/actions/authActions";
 import { useSelector, useDispatch } from "react-redux";
+import EditProfilePage from "../pages/app/EditProfile";
 
 // ----------------------------------------------------------------------
 
@@ -76,6 +78,22 @@ export default function Router() {
           element: (
             <LoggedInProtection redirectTo={"/"}>
               <QuestionDetailPage />
+            </LoggedInProtection>
+          ),
+        },
+        {
+          path: "profile",
+          element: (
+            <LoggedInProtection redirectTo={"/"}>
+              <ProfilePage />
+            </LoggedInProtection>
+          ),
+        },
+        {
+          path: "edit-profile",
+          element: (
+            <LoggedInProtection redirectTo={"/"}>
+              <EditProfilePage/>
             </LoggedInProtection>
           ),
         },

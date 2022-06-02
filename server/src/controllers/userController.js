@@ -103,3 +103,31 @@ exports.getUserProfile = async (req, res) => {
     return res.status(500).json({ error: "unexpected error occurred" });
   }
 };
+
+exports.editProfile = async (req, res) => {
+  try {
+    const { firstName, lastName, email } = req.body;
+
+    if (!firstName || !lastName || !email) {
+      return res.status(400).json({ error: "fields are empty" });
+    }
+
+    const isEmailAlreadyExists = await User.find({ email: email });
+
+    if (isEmailAlreadyExists.length === 0) {
+      return res.status(422).json({ error: "user not found" });
+    }
+
+    await User.updateOne(
+      { _id: req.user.id, email: email },
+      { $set: { firstName: firstName, lastName: lastName } }
+    );
+
+    return res.status(200).json({
+      data: "profile updated",
+    });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ error: "unexpected error occurred" });
+  }
+};

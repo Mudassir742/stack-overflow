@@ -49,7 +49,7 @@ const Header = () => {
               <ul className="profile-menu">
                 <li>
                   <Link
-                    to="/account"
+                    to="/main/profile"
                     style={{ textDecoration: "none", color: "gray" }}
                   >
                     Profile

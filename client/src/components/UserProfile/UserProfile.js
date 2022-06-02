@@ -1,51 +1,58 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const UserProfile = () => {
+  const navigate = useNavigate();
 
-    const navigate  = useNavigate()
+  const { name, email } = useSelector((state) => state.auth);
 
   return (
     <>
-      <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
-        <div class="card shadow px-4 py-5">
-          <div class=" image d-flex flex-column justify-content-center align-items-center">
-            <button class="btn btn-secondary">
+      <div className="container mt-4 mb-4 p-3 d-flex justify-content-center">
+        <div className="card shadow px-4 py-5">
+          <div className=" image d-flex flex-column justify-content-center align-items-center">
+            <button className="btn btn-secondary">
               <img
                 src="https://i.imgur.com/wvxPV9S.png"
                 height="100"
                 width="100"
               />
             </button>
-            <span class="name mt-3">Eleanor Pena</span>
-            <span class="idd">@eleanorpena</span>
+            <span className="name mt-3">{name}</span>
+            <span className="idd">{email}</span>
 
-            <div class=" d-flex mt-2">
-              <button class="btn1 btn-dark" onClick={()=>navigate("/profile")}>Edit Profile</button>
+            <div className=" d-flex mt-2">
+              <button
+                className="btn1 btn-dark"
+                onClick={() => navigate("/main/edit-profile")}
+              >
+                Edit Profile
+              </button>
             </div>
-            <div class="text mt-3">
+            <div className="text mt-3">
               <span>
                 Eleanor Pena is a creator of minimalistic x bold graphics and
                 digital artwork.Artist/ Creative Director by Day #NFT minting@
                 with FND night.
               </span>
             </div>
-            <div class="gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center">
+            <div className="gap-3 mt-3 icons d-flex flex-row justify-content-center align-items-center">
               <span>
-                <i class="fa fa-twitter"></i>
+                <i className="fa fa-twitter"></i>
               </span>
               <span>
-                <i class="fa fa-facebook-f"></i>
+                <i className="fa fa-facebook-f"></i>
               </span>
               <span>
-                <i class="fa fa-instagram"></i>
+                <i className="fa fa-instagram"></i>
               </span>
               <span>
-                <i class="fa fa-linkedin"></i>
+                <i className="fa fa-linkedin"></i>
               </span>
             </div>
-            <div class=" px-2 rounded mt-4 date ">
-              <span class="join">Joined May,2021</span>{" "}
+            <div className=" px-2 rounded mt-4 date ">
+              <span className="join">Joined May,2021</span>{" "}
             </div>
           </div>
         </div>
