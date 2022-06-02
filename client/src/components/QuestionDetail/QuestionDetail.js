@@ -1,11 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import {
-  IconArrowBarDown,
-  IconArrowBarUp,
-} from "@tabler/icons";
+import { IconArrowBarDown, IconArrowBarUp } from "@tabler/icons";
 
 import AskQuestion from "../../layouts/Modals/AskQuestion";
+import AnswerDetail from "../Answer/AnswerDetail";
 
 import { Spinner, Form } from "react-bootstrap";
 
@@ -110,6 +108,7 @@ const QuestionDetail = () => {
                 <option value="2">Date Created (old first)</option>
               </Form.Select>
             </div>
+            <AnswerDetail />
             <div className="divider my-4"></div>
             <h4
               onClick={() => setOpen(true)}

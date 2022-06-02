@@ -51,16 +51,6 @@ const AnswerDetail = ({ answer }) => {
           </div>
         </div>
       </div>
-      <div className="answer-section">
-        <div className="divider my-4"></div>
-        <div className="answer-content d-flex  justify-content-between">
-          <div className="votes-btn d-flex flex-column align-items-center mx-3">
-            <IconArrowBarUp />
-            <span className="my-2">0</span>
-            <IconArrowBarDown />
-          </div>
-        </div>
-      </div>
     </>
   );
 };
