@@ -5,6 +5,7 @@ import {
 } from "@tabler/icons";
 
 const AnswerDetail = ({ answer }) => {
+  console.log(answer);
   return (
     <>
       <div className="answer-section">
@@ -12,7 +13,7 @@ const AnswerDetail = ({ answer }) => {
         <div className="answer-content d-flex  justify-content-between">
           <div className="votes-btn d-flex flex-column align-items-center mx-3">
             <IconArrowBarUp />
-            <span className="my-2">0</span>
+            <span className="my-2">{answer?.votes}</span>
             <IconArrowBarDown />
           </div>
 
@@ -21,12 +22,7 @@ const AnswerDetail = ({ answer }) => {
               className="answer-heading"
               style={{ width: "90%", marginLeft: "3rem" }}
             >
-              you can use "useRef" to scroll to that position with click event
-              or try useEffect for scroll to that position after component
-              rendered. Lorem ipsum dolor sit, amet consectetur adipisicing
-              elit. Illo veritatis optio quia nisi atque omnis consequuntur
-              possimus nam sint tenetur? Accusamus quod, sit repudiandae
-              corrupti pariatur in repellendus sed distinctio.
+              {answer?.description}
             </p>
             <div
               className="answer-btns d-flex justify-content-between"
@@ -45,7 +41,7 @@ const AnswerDetail = ({ answer }) => {
                   borderRadius: "50%",
                 }}
               >
-                <IconEditCircle size={40} color="#F67328" />
+                {/* <IconEditCircle size={40} color="#F67328" /> */}
               </div>
             </div>
           </div>

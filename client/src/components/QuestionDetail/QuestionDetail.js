@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { IconArrowBarDown, IconArrowBarUp } from "@tabler/icons";
 
-import AskQuestion from "../../layouts/Modals/AskQuestion";
+import PostAnswer from "../../layouts/Modals/PostAnswer";
 import AnswerDetail from "../Answer/AnswerDetail";
 
 import { Spinner, Form } from "react-bootstrap";
@@ -14,7 +14,9 @@ const QuestionDetail = () => {
   const [open, setOpen] = useState(false);
   const token = getToken();
   const [questionData, setQuestionData] = useState({});
+  const [answerOfQuestion, setAnswerOfQuestion] = useState([]);
   const [questionLoading, setQuestionLoading] = useState(false);
+  const [reload, setReload] = useState(false);
   const { questionId } = useParams();
 
   useEffect(() => {
@@ -31,7 +33,8 @@ const QuestionDetail = () => {
         );
 
         console.log(questionResponse.data.data);
-        setQuestionData(questionResponse.data.data);
+        setQuestionData(questionResponse.data.data.questionDetail);
+        setAnswerOfQuestion(questionResponse.data.data.answersOfQuestion);
         setQuestionLoading(false);
       } catch (error) {
         console.log(error.message);
@@ -40,11 +43,11 @@ const QuestionDetail = () => {
     };
 
     getQuestionData();
-  }, [token, questionId]);
+  }, [token, questionId, reload]);
 
   return (
     <>
-      <AskQuestion showAsk={open} setShowAsk={setOpen} answer={true} />
+      <PostAnswer showAsk={open} setShowAsk={setOpen} setReload={setReload} />
       <div className="spinner-container">
         {questionLoading && (
           <Spinner animation="border" variant="warning"></Spinner>
@@ -108,7 +111,11 @@ const QuestionDetail = () => {
                 <option value="2">Date Created (old first)</option>
               </Form.Select>
             </div>
-            <AnswerDetail />
+            {answerOfQuestion &&
+              answerOfQuestion.map((value, index) => (
+                <AnswerDetail key={index} answer={value} />
+              ))}
+
             <div className="divider my-4"></div>
             <h4
               onClick={() => setOpen(true)}

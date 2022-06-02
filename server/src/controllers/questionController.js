@@ -1,3 +1,4 @@
+const Answer = require("../models/answerModel");
 const Question = require("../models/questionModal");
 
 exports.getQuestions = async (req, res) => {
@@ -29,7 +30,16 @@ exports.getQuestionById = async (req, res) => {
       return res.status(404).json({ error: "data not found" });
     }
 
-    return res.status(201).json({ data: questionDetail });
+    const answersOfQuestion = await Answer.find({ questionId: questionId });
+
+    return res
+      .status(201)
+      .json({
+        data: {
+          questionDetail: questionDetail,
+          answersOfQuestion: answersOfQuestion,
+        },
+      });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ error: "unexpected server error" });

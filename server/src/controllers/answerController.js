@@ -1,3 +1,4 @@
+const Question = require("../models/questionModal");
 const Answer = require("../models/answerModel");
 
 exports.getAnswer = async (req, res) => {
@@ -93,6 +94,11 @@ exports.addAnswer = async (req, res) => {
     const saveAnswer = await newAnswer.save();
 
     if (saveAnswer) {
+      const updateAnswerCount = await Question.updateOne(
+        { _id: questionId },
+        { $inc: { totalAnswers: 1 } }
+      );
+
       return res.status(201).json({ data: saveAnswer });
     }
     return res.status(422).json({ error: "unable to add answer" });
