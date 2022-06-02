@@ -18,6 +18,7 @@ import { getToken, deleteToken } from "../store/localStorage";
 import { loadProfile } from "../store/actions/authActions";
 import { useSelector, useDispatch } from "react-redux";
 import EditProfilePage from "../pages/app/EditProfile";
+import UserAnswerPage from "../pages/app/UserAnswerPage";
 
 // ----------------------------------------------------------------------
 
@@ -94,6 +95,14 @@ export default function Router() {
           element: (
             <LoggedInProtection redirectTo={"/"}>
               <EditProfilePage/>
+            </LoggedInProtection>
+          ),
+        },
+        {
+          path: "profile/user-answers",
+          element: (
+            <LoggedInProtection redirectTo={"/"}>
+              <UserAnswerPage/>
             </LoggedInProtection>
           ),
         },

@@ -58,10 +58,10 @@ const Header = () => {
                 <div className="divider my-2"></div>
                 <li>
                   <Link
-                    to="/profile"
+                    to="/main/profile/user-answers"
                     style={{ textDecoration: "none", color: "gray" }}
                   >
-                    Account
+                    My Answers
                   </Link>
                 </li>
                 <div className="divider my-2"></div>
