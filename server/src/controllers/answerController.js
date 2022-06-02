@@ -163,11 +163,11 @@ exports.updateAnswerUsefullness = async (req, res) => {
     const { userId } = req.user;
     const { answerId, isAnswerUsefull } = req.body;
 
-    if (!userId || !answerId | !isAnswerUsefull) {
+    if (!userId || !answerId) {
       return res.status(400).json({ error: "missing inputs" });
     }
 
-    const markAnswer = await Answer.updateOne(
+    await Answer.updateOne(
       { _id: answerId, userId: userId },
       { $set: { isUsefull: !isAnswerUsefull } }
     );
@@ -178,3 +178,4 @@ exports.updateAnswerUsefullness = async (req, res) => {
     return res.status(500).json({ error: "unexpected server error" });
   }
 };
+
