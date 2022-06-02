@@ -10,39 +10,49 @@ import Home from "../pages/app/Home";
 //protected
 import LoggedInProtection from "./LoggedInProtection";
 import LoggedOutProtection from "./LoggedOutProtection";
-// import { getToken, deleteToken } from "src/store/localStorage";
-// import { loadProfile } from "src/store/actions/authActions";
-// import { useSelector, useDispatch } from "react-redux";
+
+//redux
+import { getToken, deleteToken } from "../store/localStorage";
+import { loadProfile } from "../store/actions/authActions";
+import { useSelector, useDispatch } from "react-redux";
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
-  // const { isSignedIn = false } = useSelector((state) => state.auth);
-  // const dispatch = useDispatch();
-  // const navigate = useNavigate();
+  const { isSignedIn = false } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   const fetchProfile = async () => {
-  //     const token = getToken();
-  //     if (token && !isSignedIn) {
-  //       const loadProfileResponse = await dispatch(loadProfile(token));
-  //       if (loadProfileResponse) {
-  //         deleteToken();
-  //         navigate("/");
-  //       }
-  //     }
-  //   };
-  //   fetchProfile();
-  // }, [isSignedIn, dispatch, navigate]);
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = getToken();
+      if (token && !isSignedIn) {
+        const loadProfileResponse = await dispatch(loadProfile(token));
+        if (loadProfileResponse) {
+          deleteToken();
+          navigate("/");
+        }
+      }
+    };
+    fetchProfile();
+  }, [isSignedIn, dispatch, navigate]);
 
   return useRoutes([
     {
       path: "/",
-      element: <Login />,
+      element: (
+        <LoggedOutProtection redirectTo={"/main/home"}>
+          <Login />
+        </LoggedOutProtection>
+      ),
     },
     {
       path: "signup",
-      element: <Signup />,
+      element: (
+        <LoggedOutProtection redirectTo={"/main/home"}>
+          <Signup />
+        </LoggedOutProtection>
+      ),
     },
     {
       path: "main",

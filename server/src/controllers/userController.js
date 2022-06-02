@@ -1,6 +1,6 @@
 const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
-const {generateToken} = require("../utils/generateToken")
+const { generateToken } = require("../utils/generateToken");
 
 exports.userLogin = async (req, res) => {
   try {
@@ -25,18 +25,18 @@ exports.userLogin = async (req, res) => {
       return res.status(422).json({ error: "incorrect email or password" });
     }
 
-    const token = generateToken(existedUser)
+    const token = generateToken(existedUser);
 
     return res.status(201).json({
       data: {
         name: existedUser.firstName + " " + existedUser.lastName,
-        email:existedUser.email,
+        email: existedUser.email,
         userID: existedUser._id,
         token: token,
       },
     });
   } catch (err) {
-    console.log(err.message)
+    console.log(err.message);
     return res.status(500).json({ error: err.message });
   }
 };
@@ -63,22 +63,43 @@ exports.userRegister = async (req, res) => {
 
     const registerUser = await newUser.save();
 
-    const token = generateToken(registerUser)
+    const token = generateToken(registerUser);
 
     if (registerUser) {
       return res.status(200).json({
         data: {
           userID: registerUser._id,
           name: registerUser.firstName + " " + registerUser.lastName,
-          email:registerUser.email,
-          token:token
+          email: registerUser.email,
+          token: token,
         },
       });
     }
 
     return res.status(422).json({ error: "unable to register user" });
   } catch (err) {
-    console.log(err.message)
+    console.log(err.message);
+    return res.status(500).json({ error: "unexpected error occurred" });
+  }
+};
+
+exports.getUserProfile = async (req, res) => {
+  try {
+    const { userId } = req.user;
+
+    const userExists = await User.findOne({ _id: userId }, { password: 0 });
+
+    if (userExists)
+      return res.status(200).send({
+        data: {
+          userID: userExists._id,
+          name: userExists.firstName + " " + userExists.lastName,
+          email: userExists.email,
+        },
+      });
+    return res.status(404).send({ error: "user not found" });
+  } catch (err) {
+    console.log(err.message);
     return res.status(500).json({ error: "unexpected error occurred" });
   }
 };

@@ -14,11 +14,10 @@ const Header = () => {
           <img src={Logo} alt="stackunderflow" />
           <h5 className="ml-4">
             Queryunderflow
-            <sapn style={{ fontSize: "3rem", color: "#F67328" }}>.</sapn>
+            <span style={{ fontSize: "3rem", color: "#F67328" }}>.</span>
           </h5>
           <Link
             to="/main/home"
-            activeClassName="is-active"
             style={{
               textDecoration: "none",
               color: "#F67328",

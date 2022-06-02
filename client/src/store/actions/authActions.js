@@ -44,7 +44,7 @@ export const loadProfile = (token) => {
     try {
       const loadProfileResponse = await userInstance.get("/get-profile", {
         headers: {
-          authorization: `Bearer ${token}`,
+          "x-access-token": token,
         },
       });
       dispatch({
