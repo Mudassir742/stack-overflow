@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Spinner } from "react-bootstrap";
 
@@ -8,25 +8,30 @@ import {
   IconEditCircle,
 } from "@tabler/icons";
 
+import bookmarkInstance from "../../axios/bookmarkInstance";
 import answerInstance from "../../axios/answerInstance";
 import { getToken } from "../../store/localStorage";
 
-const AnswerDetail = ({ answer }) => {
-    console.log(answer.isUsefull)
+const AnswerDetail = ({ answer, isAnsBookmarked }) => {
   const token = getToken();
+  const [answerVote, setAnswerVote] = useState(answer?.votes);
+  const [isBookmarked, setIsBookmarked] = useState(isAnsBookmarked);
 
-  const [markLoading, setMarkLoading] = useState(false);
+  useEffect(() => {
+    setAnswerVote(answer?.votes);
+    setIsBookmarked(isAnsBookmarked);
+  }, [answer]);
+
   const [bookmarkLoading, setBookmarkLoading] = useState(false);
 
-  const markAnswer = async (e) => {
-      e.preventDefault()
+  const bookmarkAnswer = async (e) => {
+    e.preventDefault();
     try {
-        setMarkLoading(true)
-      const markResponse = await answerInstance.post(
-        "/update-answer-usefull",
+      setBookmarkLoading(true);
+      const bookmarkResponse = await bookmarkInstance.post(
+        "/bookmark-answer",
         {
           answerId: answer._id,
-          isAnswerUseFull: answer.isUsefull,
         },
         {
           headers: {
@@ -34,10 +39,61 @@ const AnswerDetail = ({ answer }) => {
           },
         }
       );
-      setMarkLoading(false)
-      console.log(markResponse.data.data);
+      setBookmarkLoading(false);
+      setIsBookmarked(true)
+      console.log(bookmarkResponse.data.data);
     } catch (err) {
-        setMarkLoading(false)
+      setBookmarkLoading(false);
+      console.log(err.message);
+    }
+  };
+
+  const removeBookmarkAnswer = async (e) => {
+    e.preventDefault();
+    try {
+      setBookmarkLoading(true);
+      const bookmarkResponse = await bookmarkInstance.post(
+        "/remove-bookmark-answer",
+        {
+          answerId: answer._id,
+        },
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      );
+      setBookmarkLoading(false);
+      setIsBookmarked(false)
+      console.log(bookmarkResponse.data.data);
+    } catch (err) {
+      setBookmarkLoading(false);
+      console.log(err.message);
+    }
+  };
+
+  const handleAnswerVotes = async (e, operation) => {
+    e.preventDefault();
+    try {
+      const voteResponse = await answerInstance.post(
+        "/update-answer-vote",
+        {
+          answerId: answer._id,
+          operation: operation,
+        },
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      );
+      if (operation === "inc") {
+        setAnswerVote(answerVote + 1);
+      } else {
+        setAnswerVote(answerVote - 1);
+      }
+      console.log(voteResponse.data.data);
+    } catch (err) {
       console.log(err.message);
     }
   };
@@ -48,9 +104,15 @@ const AnswerDetail = ({ answer }) => {
         <div className="divider my-4"></div>
         <div className="answer-content d-flex  justify-content-between">
           <div className="votes-btn d-flex flex-column align-items-center mx-3">
-            <IconArrowBarUp />
-            <span className="my-2">{answer?.votes}</span>
-            <IconArrowBarDown />
+            <IconArrowBarUp
+              onClick={(e) => handleAnswerVotes(e, "inc")}
+              style={{ cursor: "pointer" }}
+            />
+            <span className="my-2">{answerVote}</span>
+            <IconArrowBarDown
+              onClick={(e) => handleAnswerVotes(e, "dec")}
+              style={{ cursor: "pointer" }}
+            />
           </div>
 
           <div className="answer-body w-100">
@@ -66,15 +128,18 @@ const AnswerDetail = ({ answer }) => {
             >
               <div className="btn-groups">
                 {/* <button className="btn btn-danger">Delete</button> */}
-                <button className="btn btn-info mx-3" onClick={markAnswer}>
-                  {markLoading  && <Spinner animation="border" size="sm"/>}{ 
-                   !markLoading && answer.isUsefull === true ? (
-                    "Mark Un-Useful"
-                  ) : (
-                    "Useful"
-                  )}
-                </button>
-                <button className="btn btn-success">BookMark</button>
+                {!isBookmarked ? (
+                  <button className="btn btn-success" onClick={bookmarkAnswer}>
+                    BookMark
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-success"
+                    onClick={removeBookmarkAnswer}
+                  >
+                    Un-Bookmark
+                  </button>
+                )}
               </div>
               <div
                 style={{

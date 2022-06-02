@@ -1,5 +1,6 @@
 const Answer = require("../models/answerModel");
 const Question = require("../models/questionModal");
+const BookMark = require("../models/bookmarkAnswerModel");
 
 exports.getQuestions = async (req, res) => {
   try {
@@ -18,28 +19,26 @@ exports.getQuestions = async (req, res) => {
 
 exports.getQuestionById = async (req, res) => {
   try {
+    const {userId} = req.user
     const { questionId } = req.params;
 
-    if (!questionId) {
+    if (!questionId || !userId) {
       return res.status(400).json({ error: "missing input" });
     }
 
     const questionDetail = await Question.findById({ _id: questionId });
 
-    if (!questionDetail) {
-      return res.status(404).json({ error: "data not found" });
-    }
-
     const answersOfQuestion = await Answer.find({ questionId: questionId });
 
-    return res
-      .status(201)
-      .json({
-        data: {
-          questionDetail: questionDetail,
-          answersOfQuestion: answersOfQuestion,
-        },
-      });
+    const bookmarkAnswers = await BookMark.find({ userId: userId });
+
+    return res.status(201).json({
+      data: {
+        questionDetail: questionDetail,
+        answersOfQuestion: answersOfQuestion,
+        bookmarkAnswers: bookmarkAnswers,
+      },
+    });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ error: "unexpected server error" });

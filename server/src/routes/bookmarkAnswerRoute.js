@@ -21,4 +21,10 @@ router.post(
   bookmarkController.deleteBookmarkAnswer
 );
 
+router.post(
+  "/bookmark-answer",
+  authenticateToken,
+  bookmarkController.bookmarkAnswer
+);
+
 module.exports = router;

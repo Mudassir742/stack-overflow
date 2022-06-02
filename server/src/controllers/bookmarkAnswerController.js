@@ -50,19 +50,47 @@ exports.getBookmarkAnswerById = async (req, res) => {
 exports.deleteBookmarkAnswer = async (req, res) => {
   try {
     const { userId } = req.user;
-    const { bookmarkAnswerId } = req.params;
+    const { answerId } = req.body;
 
-    if (!bookmarkAnswerId || !userId) {
+    if (!answerId || !userId) {
       return res.status(400).json({ error: "missing input" });
     }
 
-    const isBookmarkAnswerDeleted = await Bookmark.deleteOne({
-      _id: bookmarkAnswerId,
+    await Bookmark.deleteOne({
+      answerId: answerId,
+      userId: userId,
     });
 
     return res.status(201).json({ data: "bookmark answer deleted" });
   } catch (err) {
     console.log(err.message);
+    return res.status(500).json({ error: "unexpected server error" });
+  }
+};
+
+exports.bookmarkAnswer = async (req, res) => {
+  try {
+    const { userId } = req.user;
+    const { answerId } = req.body;
+
+    if (!answerId || !userId) {
+      return res.status(400).json({ error: "missing input" });
+    }
+
+    const newBookmarkAnswer = new Bookmark({
+      userId: userId,
+      answerId: answerId,
+    });
+
+    const saveBookmarkAnswer = await newBookmarkAnswer.save();
+
+    if (saveBookmarkAnswer) {
+      return res.status(201).json({ data: saveBookmarkAnswer });
+    }
+
+    return res.status(422).json({ error: "connot bookmark answer" });
+  } catch (err) {
+    console.log(err);
     return res.status(500).json({ error: "unexpected server error" });
   }
 };

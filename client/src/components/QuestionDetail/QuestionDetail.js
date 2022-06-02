@@ -15,6 +15,7 @@ const QuestionDetail = () => {
   const token = getToken();
   const [questionData, setQuestionData] = useState({});
   const [answerOfQuestion, setAnswerOfQuestion] = useState([]);
+  const [bookmarkAnswers, setBookmarkAnswers] = useState([]);
   const [questionLoading, setQuestionLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const { questionId } = useParams();
@@ -35,6 +36,7 @@ const QuestionDetail = () => {
         console.log(questionResponse.data.data);
         setQuestionData(questionResponse.data.data.questionDetail);
         setAnswerOfQuestion(questionResponse.data.data.answersOfQuestion);
+        setBookmarkAnswers(questionResponse.data.data.bookmarkAnswers);
         setQuestionLoading(false);
       } catch (error) {
         console.log(error.message);
@@ -44,6 +46,13 @@ const QuestionDetail = () => {
 
     getQuestionData();
   }, [token, questionId, reload]);
+
+  const checkBookmark = (id) => {
+    for (let i = 0; i <= bookmarkAnswers.length; i++) {
+      if (id === bookmarkAnswers[i]?.answerId) return true;
+    }
+    return false;
+  };
 
   return (
     <>
@@ -113,7 +122,11 @@ const QuestionDetail = () => {
             </div>
             {answerOfQuestion &&
               answerOfQuestion.map((value, index) => (
-                <AnswerDetail key={index} answer={value} />
+                <AnswerDetail
+                  key={index}
+                  answer={value}
+                  isBookmarked={checkBookmark(value._id)}
+                />
               ))}
 
             <div className="divider my-4"></div>
