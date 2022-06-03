@@ -60,7 +60,7 @@ const Question = () => {
                     to={`/main/question-detail/${value._id}`}
                     style={{ textDecoration: "none", color: "black" }}
                   >
-                    <QuestionList question={value} />
+                    <QuestionList question={value} setReload={setReload}/>
                   </Link>
                 );
               })}

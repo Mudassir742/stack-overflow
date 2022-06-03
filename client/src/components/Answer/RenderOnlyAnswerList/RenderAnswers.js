@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import { Spinner } from "react-bootstrap";
 
 import AnswerList from "../AnswerList/AnswerList";
+import EditQuestion from "../../../layouts/Modals/EditQuestion"
 
 import answerInstance from "../../../axios/answerInstance";
 import { getToken } from "../../../store/localStorage";
+
 
 const RenderAnswers = () => {
   const token = getToken();
