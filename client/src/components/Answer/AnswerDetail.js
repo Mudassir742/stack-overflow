@@ -159,7 +159,6 @@ const AnswerDetail = ({ answer }) => {
               style={{ marginTop: "2rem", marginLeft: "3rem" }}
             >
               <div className="btn-groups">
-                {/* <button className="btn btn-danger">Delete</button> */}
                 {!isBookmarked && (
                   <button className="btn btn-success" onClick={bookmarkAnswer}>
                     BookMark
@@ -182,7 +181,6 @@ const AnswerDetail = ({ answer }) => {
                   borderRadius: "50%",
                 }}
               >
-                {/* <IconEditCircle size={40} color="#F67328" /> */}
               </div>
             </div>
           </div>

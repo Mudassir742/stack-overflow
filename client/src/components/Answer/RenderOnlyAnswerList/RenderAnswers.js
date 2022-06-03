@@ -51,7 +51,13 @@ const RenderAnswers = () => {
         <div className="question-data my-5">
           {answerData &&
             answerData.map((value) => {
-              return <AnswerList answer={value} showbtns={true} />;
+              return (
+                <AnswerList
+                  answer={value}
+                  showbtns={true}
+                  setReload={setReload}
+                />
+              );
             })}
         </div>
       </div>
