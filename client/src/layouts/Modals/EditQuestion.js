@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { Modal, Form } from "react-bootstrap";
 
@@ -14,6 +14,13 @@ const AskQuestion = ({ showAsk, setShowAsk, setReload, question }) => {
     title: "",
     description: "",
   });
+
+  useEffect(() => {
+    setQuestionDetail({
+      title: question.title,
+      description: question.description,
+    });
+  }, [question]);
 
   const handleDetailChange = (e) => {
     setQuestionDetail({ ...questionDetail, [e.target.name]: e.target.value });

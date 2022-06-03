@@ -107,6 +107,7 @@ exports.getUserProfile = async (req, res) => {
 exports.editProfile = async (req, res) => {
   try {
     const { firstName, lastName, email } = req.body;
+    console.log(req.body)
 
     if (!firstName || !lastName || !email) {
       return res.status(400).json({ error: "fields are empty" });

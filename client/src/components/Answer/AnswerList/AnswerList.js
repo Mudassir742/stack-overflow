@@ -1,4 +1,4 @@
-import { IconEditCircle } from "@tabler/icons";
+import { IconEditCircle, IconTrash } from "@tabler/icons";
 import { useState } from "react";
 
 import EditAnswer from "../../../layouts/Modals/EditAnswer";
@@ -8,7 +8,7 @@ import answerInstance from "../../../axios/answerInstance";
 
 const AnswerList = ({ answer, setReload }) => {
   const [open, setOpen] = useState(false);
-  const token = getToken()
+  const token = getToken();
   const handleAnswerDelete = async (e) => {
     e.preventDefault();
     try {
@@ -36,32 +36,31 @@ const AnswerList = ({ answer, setReload }) => {
         setShowAsk={setOpen}
         setReload={setReload}
       />
-      <div className="question-content-container bg-white shadow w-100 my-4 py-5 px-3 d-flex">
-        <div className="left-col mx-3">
-          <div className="votes">
-            <span>{answer?.votes}</span>
-            <span>votes</span>
-          </div>
-        </div>
-        <div className="right-col mx-3">
-          <div className="ask-question">
-            <p className="question-detail my-4">{answer?.description}</p>
-          </div>
-        </div>
-
+      <div className="question-content-container bg-white shadow w-100 my-4 py-4 px-3">
         <div
-          className="answer-btns d-flex justify-content-between"
-          style={{ marginTop: "2rem", marginLeft: "3rem" }}
+          className="answer-btns d-flex"
+          style={{ margin: "1rem 0"}}
         >
-          <button className="btn btn-danger" onClick={handleAnswerDelete}>
-            Delete
-          </button>
+          <IconTrash size={40} color="red" onClick={handleAnswerDelete} />
 
           <IconEditCircle
             size={40}
             color="#F67328"
             onClick={(e) => setOpen(true)}
           />
+        </div>
+        <div className="ans-detail">
+          <div className="left-col">
+            <div className="votes">
+              <span>{answer?.votes}</span>
+              <span>votes</span>
+            </div>
+          </div>
+          <div className="right-col">
+            <div className="ask-question">
+              <p className="question-detail my-4">{answer?.description}</p>
+            </div>
+          </div>
         </div>
       </div>
     </>

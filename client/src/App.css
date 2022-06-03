@@ -324,6 +324,31 @@ body {
   text-decoration: none;
 }
 
+.navbar-menu{
+  display: flex;
+  align-items: center;
+  margin-left: 11%;
+  width: 80%;
+}
+
+.menu-links {
+  padding: .5rem 1rem;
+  margin-left: 2rem;
+  border-radius: 8px;
+  border: transparent;
+  color:#F67328;
+  background-color: transparent;
+  transition: background-color .5s;
+}
+
+
+
+.active , .menu-links:hover {
+  background-color: #F28C28;
+  color: white;
+  transition: background-color .5s;
+}
+
 ul, li {
   list-style: none;
   text-decoration: none;
@@ -356,7 +381,7 @@ ul, li {
   background-color: white;
   width: 150px;
   top: 110%;
-  left: 30%;
+  left: -150%;
   padding: 1rem;
   z-index: 1000;
 }
@@ -437,6 +462,10 @@ ul, li {
   margin: 2rem 0;
 }
 
+.question-detail{
+  word-wrap: break-word;
+}
+
 
 /*----------------------------------------------Profile--------------------------------*/
 .card {
@@ -512,6 +541,10 @@ hr .new1 {
 
 .date {
   background-color: #ccc
+}
+
+.btn-groups:first-child {
+	cursor: pointer;
 }
 
 .spinner-container{

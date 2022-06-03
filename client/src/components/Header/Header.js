@@ -1,11 +1,17 @@
 import { IconUserCircle } from "@tabler/icons";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink,Link } from "react-router-dom";
 
 import Logo from "../../assets/logo.png";
 
+import { deleteToken, getToken } from "../../store/localStorage";
+import { loadProfile } from "../../store/actions/authActions";
+import { useDispatch } from "react-redux";
+
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
+  const dispatch = useDispatch();
+  const token = getToken();
 
   return (
     <header className="header w-100 py-5 border d-flex align-items-center justify-content-center">
@@ -16,19 +22,42 @@ const Header = () => {
             Queryunderflow
             <span style={{ fontSize: "3rem", color: "#F67328" }}>.</span>
           </h5>
-          <Link
+        </div>
+        <div className="navbar-menu">
+          <NavLink
             to="/main/home"
+            className="menu-links"
             style={{
               textDecoration: "none",
-              color: "#F67328",
               fontWeight: "bold",
               marginLeft: "1.2rem",
             }}
           >
             Home
-          </Link>
+          </NavLink>
+          <NavLink
+            to="/main/profile/user-questions"
+            className="menu-links"
+            style={{ textDecoration: "none" }}
+          >
+            My Questions
+          </NavLink>
+          <NavLink
+            to="/main/profile/user-answers"
+            className="menu-links"
+            style={{ textDecoration: "none" }}
+          >
+            My Answers
+          </NavLink>
+          <NavLink
+            to="/main/profile/bookmark-answers"
+            className="menu-links"
+            style={{ textDecoration: "none" }}
+          >
+            BookMarked
+          </NavLink>
         </div>
-        <div className="form-group">
+        {/* <div className="form-group">
           <input
             type="email"
             className="form-control"
@@ -39,7 +68,7 @@ const Header = () => {
           <button type="submit" className="btn">
             Search
           </button>
-        </div>
+        </div> */}
         <div className="btns">
           <div className="profile" onClick={() => setShowMenu(!showMenu)}>
             <div className="avatar">
@@ -75,12 +104,20 @@ const Header = () => {
                 </li>
                 <div className="divider my-2"></div>
                 <li>
-                  <Link
-                    to="/"
-                    style={{ textDecoration: "none", color: "gray" }}
+                  <button
+                    style={{
+                      textDecoration: "none",
+                      color: "gray",
+                      border: "transparent",
+                      background: "none",
+                    }}
+                    onClick={(e) => {
+                      deleteToken();
+                      dispatch(loadProfile(token));
+                    }}
                   >
                     Logout
-                  </Link>
+                  </button>
                 </li>
               </ul>
             </div>

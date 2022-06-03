@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { IconEditCircle } from "@tabler/icons";
+import { IconEditCircle, IconTrash } from "@tabler/icons";
+import { Link } from "react-router-dom";
 
 import EditQuestion from "../../../layouts/Modals/EditQuestion";
 
 import questionInstance from "../../../axios/questionInstance";
 import { getToken } from "../../../store/localStorage";
 
-const QuestionList = ({ question, setReload }) => {
+const QuestionList = ({ question, setReload, showBtns }) => {
   const token = getToken();
 
   const [open, setOpen] = useState(false);
@@ -38,48 +39,45 @@ const QuestionList = ({ question, setReload }) => {
         showAsk={open}
         setShowAsk={setOpen}
       />
-      <div className="question-content-container bg-white shadow w-100 my-4 py-5 px-3 d-flex">
-        <div className="left-col mx-3">
-          <div className="votes">
-            <span>{question?.votes}</span>
-            <span>votes</span>
-          </div>
-          <div className="votes my-2">
-            <span>{question.totalAnswers}</span>
-            <span>answers</span>
-          </div>
-        </div>
-        <div className="right-col mx-3">
-          <div className="ask-question">
-            <h5 className="question-heading">{question?.title}</h5>
-            <p className="question-detail my-4">{question?.description}</p>
-            <ul className="question-tags d-flex align-items-center">
-              <li>
-                <span>nodejs</span>
-              </li>
-              <li>
-                <span>linux</span>
-              </li>
-              <li>
-                <span>ubuntu</span>
-              </li>
-            </ul>
-          </div>
+      <div className="question-content-container bg-white shadow w-100 my-4 py-4 px-3">
+        {showBtns && (
           <div
-            className="answer-btns d-flex justify-content-between"
-            style={{ marginTop: "2rem", marginLeft: "3rem" }}
+            className="answer-btns d-flex w-100 justify-content-end"
+            style={{ margin: "1rem 0" }}
           >
-            <button className="btn btn-danger" onClick={handleQuestionDelete}>
-              Delete
-            </button>
+            <IconTrash size={40} color="red" onClick={handleQuestionDelete} />
 
             <IconEditCircle
               size={40}
               color="#F67328"
               onClick={(e) => setOpen(true)}
+              sx={{ marginLeft: "1rem" }}
             />
           </div>
-        </div>
+        )}
+        <Link
+          to={`/main/question-detail/${question._id}`}
+          style={{ textDecoration: "none", color: "black" }}
+        >
+          <div className="d-flex">
+            <div className="left-col mx-3">
+              <div className="votes">
+                <span>{question?.votes}</span>
+                <span>votes</span>
+              </div>
+              <div className="votes my-2">
+                <span>{question.totalAnswers}</span>
+                <span>answers</span>
+              </div>
+            </div>
+            <div className="right-col mx-3">
+              <div className="ask-question">
+                <h5 className="question-heading">{question?.title}</h5>
+                <p className="question-detail my-4">{question?.description}</p>
+              </div>
+            </div>
+          </div>
+        </Link>
       </div>
     </>
   );

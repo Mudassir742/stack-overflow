@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 
 //react-bootstrap
 import { Spinner } from "react-bootstrap";
@@ -55,13 +54,12 @@ const Question = () => {
             {questionData &&
               questionData.map((value) => {
                 return (
-                  <Link
+                  <QuestionList
                     key={value._id}
-                    to={`/main/question-detail/${value._id}`}
-                    style={{ textDecoration: "none", color: "black" }}
-                  >
-                    <QuestionList question={value} setReload={setReload}/>
-                  </Link>
+                    question={value}
+                    setReload={setReload}
+                    showBtns={true}
+                  />
                 );
               })}
           </div>

@@ -5,7 +5,8 @@ import { Spinner } from "react-bootstrap";
 import {
   IconArrowBarDown,
   IconArrowBarUp,
-  IconEditCircle,
+  IconBookmark,
+  IconBookmarkOff,
 } from "@tabler/icons";
 
 import bookmarkInstance from "../../axios/bookmarkInstance";
@@ -48,15 +49,16 @@ const AnswerDetail = ({ answer }) => {
   useEffect(() => {
     const checkBookmark = () => {
       for (let i = 0; i <= bookmarkAnswers.length; i++) {
-        if (answer._id === bookmarkAnswers[i]?.answerId._id)
+        if (answer._id === bookmarkAnswers[i]?.answerId._id) {
           setIsBookmarked(true);
-        return;
+          return;
+        }
       }
       setIsBookmarked(false);
       return;
     };
     checkBookmark();
-  }, [answer]);
+  }, [answer, bookmarkAnswers]);
 
   const bookmarkAnswer = async (e) => {
     e.preventDefault();
@@ -65,7 +67,7 @@ const AnswerDetail = ({ answer }) => {
       const bookmarkResponse = await bookmarkInstance.post(
         "/bookmark-answer",
         {
-          answerId: answer._id,
+          answerId: answer?._id,
         },
         {
           headers: {
@@ -74,6 +76,7 @@ const AnswerDetail = ({ answer }) => {
         }
       );
       setBookmarkLoading(false);
+      setIsBookmarked(true);
       console.log(bookmarkResponse.data.data);
     } catch (err) {
       setBookmarkLoading(false);
@@ -88,7 +91,7 @@ const AnswerDetail = ({ answer }) => {
       const bookmarkResponse = await bookmarkInstance.post(
         "/remove-bookmark-answer",
         {
-          answerId: answer._id,
+          answerId: answer?._id,
         },
         {
           headers: {
@@ -97,6 +100,7 @@ const AnswerDetail = ({ answer }) => {
         }
       );
       setBookmarkLoading(false);
+      setIsBookmarked(false);
       console.log(bookmarkResponse.data.data);
     } catch (err) {
       setBookmarkLoading(false);
@@ -110,7 +114,7 @@ const AnswerDetail = ({ answer }) => {
       const voteResponse = await answerInstance.post(
         "/update-answer-vote",
         {
-          answerId: answer._id,
+          answerId: answer?._id,
           operation: operation,
         },
         {
@@ -135,7 +139,7 @@ const AnswerDetail = ({ answer }) => {
       <div className="answer-section">
         <div className="divider my-4"></div>
         <div className="answer-content d-flex  justify-content-between">
-          <div className="votes-btn d-flex flex-column align-items-center mx-3">
+          <div className="votes-btn d-flex flex-column align-items-center px-3 mx-3">
             <IconArrowBarUp
               onClick={(e) => handleAnswerVotes(e, "inc")}
               style={{ cursor: "pointer" }}
@@ -148,6 +152,27 @@ const AnswerDetail = ({ answer }) => {
           </div>
 
           <div className="answer-body w-100">
+            <div className="btn-groups w-100 d-flex justify-content-end mr-3">
+              {!isBookmarked &&
+                (bookmarkLoading ? (
+                  <Spinner animation="border" size="sm" />
+                ) : (
+                  <IconBookmarkOff
+                    color="green"
+                    size={35}
+                    onClick={bookmarkAnswer}
+                  />
+                ))}
+              {isBookmarked && (bookmarkLoading ? (
+                  <Spinner animation="border" size="sm" />
+                ) : (
+                  <IconBookmark
+                    color="red"
+                    size={35}
+                    onClick={removeBookmarkAnswer}
+                  />
+                ))}
+            </div>
             <p
               className="answer-heading"
               style={{ width: "90%", marginLeft: "3rem" }}
@@ -158,21 +183,6 @@ const AnswerDetail = ({ answer }) => {
               className="answer-btns d-flex justify-content-between"
               style={{ marginTop: "2rem", marginLeft: "3rem" }}
             >
-              <div className="btn-groups">
-                {!isBookmarked && (
-                  <button className="btn btn-success" onClick={bookmarkAnswer}>
-                    BookMark
-                  </button>
-                )}
-                {isBookmarked && (
-                  <button
-                    className="btn btn-warning"
-                    onClick={removeBookmarkAnswer}
-                  >
-                    Un-Bookmark
-                  </button>
-                )}
-              </div>
               <div
                 style={{
                   width: "60px",
@@ -180,8 +190,7 @@ const AnswerDetail = ({ answer }) => {
                   cursor: "pointer",
                   borderRadius: "50%",
                 }}
-              >
-              </div>
+              ></div>
             </div>
           </div>
         </div>

@@ -11,6 +11,7 @@ import ProfilePage from "../pages/app/Profile";
 import EditProfilePage from "../pages/app/EditProfile";
 import UserAnswerPage from "../pages/app/UserAnswerPage";
 import UserQuestionPage from "../pages/app/UserQuestionPage";
+import BookmarkAnswerPage from "../pages/app/BookmarkAnswerPage";
 
 //protected
 import LoggedInProtection from "./LoggedInProtection";
@@ -112,6 +113,14 @@ export default function Router() {
           element: (
             <LoggedInProtection redirectTo={"/"}>
               <UserQuestionPage />
+            </LoggedInProtection>
+          ),
+        },
+        {
+          path: "profile/bookmark-answers",
+          element: (
+            <LoggedInProtection redirectTo={"/"}>
+              <BookmarkAnswerPage />
             </LoggedInProtection>
           ),
         },

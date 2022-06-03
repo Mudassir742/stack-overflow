@@ -19,7 +19,7 @@ exports.getQuestions = async (req, res) => {
 
 exports.getQuestionById = async (req, res) => {
   try {
-    const {userId} = req.user
+    const { userId } = req.user;
     const { questionId } = req.params;
 
     if (!questionId || !userId) {
@@ -68,16 +68,16 @@ exports.getAllQuestionsOfSpecificUser = async (req, res) => {
 
 exports.deleteQuestionById = async (req, res) => {
   try {
-    const { QuestionId } = req.params;
+    const { questionId } = req.params;
 
     const { userId } = req.user;
 
-    if (!userId || !QuestionId) {
+    if (!userId || !questionId) {
       return res.status(400).json({ error: "missing details" });
     }
 
     const isQuestionDeleted = await Question.findOneAndDelete({
-      _id: QuestionId,
+      _id: questionId,
       userId: userId,
     });
 
@@ -118,15 +118,15 @@ exports.addQuestion = async (req, res) => {
 exports.editQuestion = async (req, res) => {
   try {
     const { userId } = req.user;
-    const { title, description, questionId, tags } = req.body;
-
-    if (!userId || !title || !description || !questionId || tags) {
+    const { title, description, questionId } = req.body;
+    console.log(req.body);
+    if (!userId || !title || !description || !questionId) {
       return res.status(400).json({ error: "missing inputs" });
     }
 
     const isQuestionUpdated = await Question.updateOne(
       { _id: questionId, userId: userId },
-      { title: title, description: description, tags: tags }
+      { title: title, description: description }
     );
 
     return res.status(201).json({ data: "question updated!" });
