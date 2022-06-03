@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Navigate, useRoutes, useNavigate } from "react-router-dom";
+import { useRoutes, useNavigate } from "react-router-dom";
 
 //pages
 import Login from "../pages/auth/Login";

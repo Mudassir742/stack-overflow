@@ -78,9 +78,9 @@ const RenderAnswers = () => {
           {bookmarkData &&
             bookmarkData.map((value) => {
               return (
-                <div className="question-content-container bg-white shadow w-100 my-4 py-4 px-3">
+                <div className="question-content-container bg-white shadow w-100 my-4 py-4 px-5">
                   <div
-                    className="answer-btns d-flex"
+                    className="answer-btns d-flex w-100 justify-content-end"
                     style={{ margin: "1rem 0" }}
                   >
                     <IconTrash

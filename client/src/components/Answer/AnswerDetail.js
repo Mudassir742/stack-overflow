@@ -139,7 +139,7 @@ const AnswerDetail = ({ answer }) => {
       <div className="answer-section">
         <div className="divider my-4"></div>
         <div className="answer-content d-flex  justify-content-between">
-          <div className="votes-btn d-flex flex-column align-items-center px-3 mx-3">
+          <div className="votes-btn d-flex flex-column align-items-center px-5 mx-3">
             <IconArrowBarUp
               onClick={(e) => handleAnswerVotes(e, "inc")}
               style={{ cursor: "pointer" }}
