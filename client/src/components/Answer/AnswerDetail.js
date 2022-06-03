@@ -108,14 +108,38 @@ const AnswerDetail = ({ answer }) => {
     }
   };
 
-  const handleAnswerVotes = async (e, operation) => {
+  const handleUpVotes = async (e, operation) => {
     e.preventDefault();
     try {
       const voteResponse = await answerInstance.post(
-        "/update-answer-vote",
+        "/update-up-vote",
         {
-          answerId: answer?._id,
-          operation: operation,
+          answerId: answer?._id
+        },
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      );
+      if (operation === "inc") {
+        setAnswerVote(answerVote + 1);
+      } else {
+        setAnswerVote(answerVote - 1);
+      }
+      console.log(voteResponse.data.data);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  const handleDownVotes = async (e, operation) => {
+    e.preventDefault();
+    try {
+      const voteResponse = await answerInstance.post(
+        "/update-down-vote",
+        {
+          answerId: answer?._id
         },
         {
           headers: {
@@ -141,12 +165,12 @@ const AnswerDetail = ({ answer }) => {
         <div className="answer-content d-flex  justify-content-between">
           <div className="votes-btn d-flex flex-column align-items-center px-5 mx-3">
             <IconArrowBarUp
-              onClick={(e) => handleAnswerVotes(e, "inc")}
+              onClick={(e) => handleUpVotes(e, "inc")}
               style={{ cursor: "pointer" }}
             />
             <span className="my-2">{answerVote}</span>
             <IconArrowBarDown
-              onClick={(e) => handleAnswerVotes(e, "dec")}
+            onClick={(e) => handleDownVotes(e, "dec")}
               style={{ cursor: "pointer" }}
             />
           </div>

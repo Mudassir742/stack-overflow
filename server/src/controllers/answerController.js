@@ -129,29 +129,74 @@ exports.editAnswer = async (req, res) => {
   }
 };
 
-exports.updateAnswerVotes = async (req, res) => {
+exports.updateUpVote = async (req, res) => {
   try {
     const { userId } = req.user;
-    const { answerId, operation } = req.body;
+    const { answerId } = req.body;
 
-    if (!userId || !answerId || !operation) {
+    if (!userId || !answerId) {
       return res.status(400).json({ error: "missing inputs" });
     }
 
-    let updateVoteCount;
-    if (operation === "inc") {
-      updateVoteCount = await Answer.updateOne(
-        { _id: answerId, userId: userId },
-        { $inc: { votes: 1 } }
+    const getUpVotes = await Answer.findById({ _id: answerId });
+
+    const isUserInDownVotes = getUpVotes.downVotes.includes(userId);
+
+    if (isUserInDownVotes) {
+      await Answer.updateOne(
+        { _id: answerId },
+        { $pull: { downVotes: userId } }
       );
-    } else {
-      updateVoteCount = await Answer.updateOne(
-        { _id: answerId, userId: userId },
-        { $inc: { votes: -1 } }
-      );
+      await Answer.updateOne({ _id: answerId }, { $inc: { votes: 1 } });
+      return res.status(201).json({ data: "voted" });
     }
 
-    return res.status(201).json({ data: "vote updated!" });
+    const isUserInUpvotes = getUpVotes.upVotes.includes(userId);
+
+    if (!isUserInUpvotes) {
+      await Answer.updateOne({ _id: answerId }, { $push: { upVotes: userId } });
+      await Answer.updateOne({ _id: answerId }, { $inc: { votes: 1 } });
+      return res.status(201).json({ data: "voted" });
+    }
+
+    return res.status(409).json({ error: "already voted" });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ error: "unexpected server error" });
+  }
+};
+
+exports.updateDownVote = async (req, res) => {
+  try {
+    const { userId } = req.user;
+    const { answerId } = req.body;
+
+    if (!userId || !answerId) {
+      return res.status(400).json({ error: "missing inputs" });
+    }
+
+    const getUpVotes = await Answer.findById({ _id: answerId });
+
+    const isUserInUpvotes = getUpVotes.upVotes.includes(userId);
+
+    if (isUserInUpvotes) {
+      await Answer.updateOne({ _id: answerId }, { $pull: { upVotes: userId } });
+      await Answer.updateOne({ _id: answerId }, { $inc: { votes: -1 } });
+      return res.status(201).json({ data: "voted" });
+    }
+
+    const isUserInDownVotes = getUpVotes.downVotes.includes(userId);
+
+    if (!isUserInDownVotes) {
+      await Answer.updateOne(
+        { _id: answerId },
+        { $push: { downVotes: userId } }
+      );
+      await Answer.updateOne({ _id: answerId }, { $inc: { votes: -1 } });
+      return res.status(201).json({ data: "voted" });
+    }
+
+    return res.status(409).json({ error: "already voted" });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ error: "unexpected server error" });
@@ -178,4 +223,3 @@ exports.updateAnswerUsefullness = async (req, res) => {
     return res.status(500).json({ error: "unexpected server error" });
   }
 };
-

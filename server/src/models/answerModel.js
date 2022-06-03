@@ -20,6 +20,12 @@ const answerSchema = mongoose.Schema(
       type: Number,
       default: 0,
     },
+    upVotes: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+    },
+    downVotes: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
+    },
     isUsefull: {
       type: Boolean,
       default: false,

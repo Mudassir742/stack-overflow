@@ -28,9 +28,15 @@ router.post("/create-answer", authenticateToken, answerController.addAnswer);
 router.post("/edit-answer", authenticateToken, answerController.editAnswer);
 
 router.post(
-  "/update-answer-vote",
+  "/update-up-vote",
   authenticateToken,
-  answerController.updateAnswerVotes
+  answerController.updateUpVote
+);
+
+router.post(
+  "/update-down-vote",
+  authenticateToken,
+  answerController.updateDownVote
 );
 
 router.post(
