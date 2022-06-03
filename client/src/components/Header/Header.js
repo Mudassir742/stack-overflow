@@ -67,6 +67,15 @@ const Header = () => {
                 <div className="divider my-2"></div>
                 <li>
                   <Link
+                    to="/main/profile/user-questions"
+                    style={{ textDecoration: "none", color: "gray" }}
+                  >
+                    My Questions
+                  </Link>
+                </li>
+                <div className="divider my-2"></div>
+                <li>
+                  <Link
                     to="/"
                     style={{ textDecoration: "none", color: "gray" }}
                   >
