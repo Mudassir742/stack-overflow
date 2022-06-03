@@ -1,5 +1,6 @@
 const Question = require("../models/questionModal");
 const Answer = require("../models/answerModel");
+const Bookmark = require("../models/bookmarkAnswerModel");
 
 exports.getAnswer = async (req, res) => {
   try {
@@ -64,10 +65,16 @@ exports.deleteAnswerById = async (req, res) => {
       return res.status(400).json({ error: "missing details" });
     }
 
-    const isAnswerDeleted = await Answer.findOneAndDelete({
+    await Answer.findOneAndDelete({
       _id: answerId,
       userId: userId,
     });
+
+    const isAnswerBookmarked = await Bookmark.findOne({ answerId: answerId });
+
+    if (isAnswerBookmarked) {
+      await Bookmark.deleteOne({ answerId: answerId });
+    }
 
     return res.status(201).json({ data: "answer deleted succesfully" });
   } catch (err) {

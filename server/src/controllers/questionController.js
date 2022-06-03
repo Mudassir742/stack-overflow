@@ -76,10 +76,22 @@ exports.deleteQuestionById = async (req, res) => {
       return res.status(400).json({ error: "missing details" });
     }
 
-    const isQuestionDeleted = await Question.findOneAndDelete({
+    await Question.findOneAndDelete({
       _id: questionId,
       userId: userId,
     });
+
+    const answersOfQuestion = await Answer.find({ questionId: questionId });
+
+    if (answersOfQuestion.length !== 0) {
+      await Answer.deleteMany({ questionId: questionId });
+    }
+
+    console.log(answersOfQuestion);
+
+    for (let i = 0; i < answersOfQuestion.length; i++) {
+      await BookMark.deleteMany({ answerId: answersOfQuestion[i]._id });
+    }
 
     return res.status(201).json({ data: "question deleted succesfully" });
   } catch (err) {
@@ -136,29 +148,80 @@ exports.editQuestion = async (req, res) => {
   }
 };
 
-exports.updateVotes = async (req, res) => {
+exports.updateUpVote = async (req, res) => {
   try {
     const { userId } = req.user;
-    const { questionId, operation } = req.body;
+    const { questionId } = req.body;
 
-    if (!userId || !questionId || operation) {
+    if (!userId || !questionId) {
       return res.status(400).json({ error: "missing inputs" });
     }
 
-    let updateVoteCount;
-    if (operation === "inc") {
-      updateVoteCount = await Question.updateOne(
-        { _id: questionId, userId: userId },
-        { $inc: { votes: 1 } }
+    const getUpVotes = await Question.findById({ _id: questionId });
+
+    const isUserInDownVotes = getUpVotes.downVotes.includes(userId);
+
+    if (isUserInDownVotes) {
+      await Question.updateOne(
+        { _id: questionId },
+        { $pull: { downVotes: userId } }
       );
-    } else {
-      updateVoteCount = await Question.updateOne(
-        { _id: questionId, userId: userId },
-        { $inc: { votes: -1 } }
-      );
+      await Question.updateOne({ _id: questionId }, { $inc: { votes: 1 } });
+      return res.status(201).json({ data: "voted" });
     }
 
-    return res.status(201).json({ data: "vote updated!" });
+    const isUserInUpvotes = getUpVotes.upVotes.includes(userId);
+
+    if (!isUserInUpvotes) {
+      await Question.updateOne(
+        { _id: questionId },
+        { $push: { upVotes: userId } }
+      );
+      await Question.updateOne({ _id: questionId }, { $inc: { votes: 1 } });
+      return res.status(201).json({ data: "voted" });
+    }
+
+    return res.status(409).json({ error: "already voted" });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).json({ error: "unexpected server error" });
+  }
+};
+
+exports.updateDownVote = async (req, res) => {
+  try {
+    const { userId } = req.user;
+    const { questionId } = req.body;
+
+    if (!userId || !questionId) {
+      return res.status(400).json({ error: "missing inputs" });
+    }
+
+    const getUpVotes = await Question.findById({ _id: questionId });
+
+    const isUserInUpvotes = getUpVotes.upVotes.includes(userId);
+
+    if (isUserInUpvotes) {
+      await Question.updateOne(
+        { _id: questionId },
+        { $pull: { upVotes: userId } }
+      );
+      await Question.updateOne({ _id: questionId }, { $inc: { votes: -1 } });
+      return res.status(201).json({ data: "voted" });
+    }
+
+    const isUserInDownVotes = getUpVotes.downVotes.includes(userId);
+
+    if (!isUserInDownVotes) {
+      await Question.updateOne(
+        { _id: questionId },
+        { $push: { downVotes: userId } }
+      );
+      await Question.updateOne({ _id: questionId }, { $inc: { votes: -1 } });
+      return res.status(201).json({ data: "voted" });
+    }
+
+    return res.status(409).json({ error: "already voted" });
   } catch (err) {
     console.log(err.message);
     return res.status(500).json({ error: "unexpected server error" });

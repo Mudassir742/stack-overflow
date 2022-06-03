@@ -14,6 +14,7 @@ const QuestionDetail = () => {
   const [open, setOpen] = useState(false);
   const token = getToken();
   const [questionData, setQuestionData] = useState({});
+  const [questionVote, setQuestionVote] = useState(0);
   const [answerOfQuestion, setAnswerOfQuestion] = useState([]);
   const [questionLoading, setQuestionLoading] = useState(false);
   const [reload, setReload] = useState(false);
@@ -44,6 +45,53 @@ const QuestionDetail = () => {
 
     getQuestionData();
   }, [token, questionId, reload]);
+
+  useEffect(() => {
+    setQuestionVote(questionData.votes);
+  }, [token, questionId, questionData, reload]);
+
+  const handleUpVotes = async (e, questionId) => {
+    e.preventDefault();
+    try {
+      const voteResponse = await questionInstance.post(
+        "/update-up-vote",
+        {
+          questionId: questionId,
+        },
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      );
+      setQuestionVote(questionVote + 1);
+      console.log(voteResponse.data.data);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  const handleDownVotes = async (e, questionId) => {
+    e.preventDefault();
+    try {
+      const voteResponse = await questionInstance.post(
+        "/update-down-vote",
+        {
+          questionId: questionId,
+        },
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      );
+
+      setQuestionVote(questionVote - 1);
+      console.log(voteResponse.data.data);
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
 
   return (
     <>
@@ -79,9 +127,15 @@ const QuestionDetail = () => {
           <div className="divider my-4"></div>
           <div className="question-detail-body w-100 d-flex">
             <div className="votes-btn d-flex flex-column align-items-center mx-2">
-              <IconArrowBarUp />
-              <span className="my-2">{questionData?.votes}</span>
-              <IconArrowBarDown />
+              <IconArrowBarUp
+                onClick={(e) => handleUpVotes(e, questionId)}
+                style={{ cursor: "pointer" }}
+              />
+              <span className="my-2">{questionVote}</span>
+              <IconArrowBarDown
+                onClick={(e) => handleDownVotes(e, questionId)}
+                style={{ cursor: "pointer" }}
+              />
             </div>
             <p className="mx-2">{questionData?.description}</p>
           </div>

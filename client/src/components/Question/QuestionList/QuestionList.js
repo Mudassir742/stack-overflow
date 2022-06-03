@@ -45,10 +45,15 @@ const QuestionList = ({ question, setReload, showBtns }) => {
             className="answer-btns d-flex w-100 justify-content-end"
             style={{ margin: "1rem 0" }}
           >
-            <IconTrash size={40} color="red" onClick={handleQuestionDelete} />
+            <IconTrash
+              size={35}
+              color="red"
+              style={{ marginRight: "2rem" }}
+              onClick={handleQuestionDelete}
+            />
 
             <IconEditCircle
-              size={40}
+              size={35}
               color="#F67328"
               onClick={(e) => setOpen(true)}
               sx={{ marginLeft: "1rem" }}

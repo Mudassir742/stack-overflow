@@ -39,9 +39,15 @@ router.post(
 );
 
 router.post(
-  "/update-question-vote",
+  "/update-up-vote",
   authenticateToken,
-  questionController.updateVotes
+  questionController.updateUpVote
+);
+
+router.post(
+  "/update-down-vote",
+  authenticateToken,
+  questionController.updateDownVote
 );
 
 module.exports = router;

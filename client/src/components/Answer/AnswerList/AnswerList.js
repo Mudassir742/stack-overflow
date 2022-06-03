@@ -41,10 +41,10 @@ const AnswerList = ({ answer, setReload }) => {
           className="answer-btns d-flex w-100 justify-content-end"
           style={{ margin: "1rem 0"}}
         >
-          <IconTrash size={40} color="red" onClick={handleAnswerDelete} />
+          <IconTrash size={35} color="red" style={{marginRight:'2rem'}} onClick={handleAnswerDelete} />
 
           <IconEditCircle
-            size={40}
+            size={35}
             color="#F67328"
             onClick={(e) => setOpen(true)}
           />
