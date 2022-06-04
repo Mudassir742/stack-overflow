@@ -117,10 +117,10 @@ const QuestionDetail = () => {
               Question:
             </h3>
             <h4 className="question-heading">{questionData?.title}</h4>
-            <div className="time">
-              <span>Asked</span>
+            <div className="time w-100 d-flex justify-content-end align-items-center">
+              <span>by {questionData?.userId?.firstName} {questionData?.userId?.lastName}</span>
               <span className="mx-2" style={{ fontSize: ".9rem" }}>
-                (time)
+               at ({questionData && new Date(questionData?.createdAt).toDateString()})
               </span>
             </div>
           </div>

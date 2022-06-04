@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
+//mui
+import { Pagination } from "@mui/material";
 //react-bootstrap
 import { Spinner } from "react-bootstrap";
 
@@ -14,7 +16,12 @@ const Question = () => {
   const token = getToken();
   const [showAsk, setShowAsk] = useState(false);
   const [reload, setReload] = useState(false);
+
   const [questionData, setQquestionData] = useState([]);
+  const [questionCount, setQuestionCount] = useState(1);
+  const [pageNumber, setPageNumber] = useState(1);
+  const limit = 5;
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -22,13 +29,20 @@ const Question = () => {
       setLoading(true);
       try {
         const questionResponse = await questionInstance.get("/get-questions", {
+          params: {
+            page: pageNumber,
+            limit: limit,
+          },
           headers: {
             "x-access-token": token,
           },
         });
 
-        console.log(questionResponse.data.data);
+        console.log(questionResponse.data);
         setQquestionData(questionResponse.data.data);
+        setQuestionCount(
+          Math.ceil(questionResponse.data.totalQuestions / limit)
+        );
         setLoading(false);
       } catch (error) {
         console.log(error.message);
@@ -37,7 +51,7 @@ const Question = () => {
     };
 
     getQuestionData();
-  }, [token, reload]);
+  }, [token, reload, pageNumber]);
 
   return (
     <>
@@ -75,6 +89,14 @@ const Question = () => {
               })}
           </div>
         </div>
+      </div>
+      <div className="pagination w-100 my-5 d-flex justify-content-center">
+        <Pagination
+          count={questionCount}
+          color="primary"
+          onChange={(event, value) => setPageNumber(value)}
+          page={pageNumber}
+        />
       </div>
     </>
   );

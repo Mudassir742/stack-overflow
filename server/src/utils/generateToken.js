@@ -8,6 +8,6 @@ exports.generateToken = (user) => {
       password: user.password,
     },
     process.env.JWT_KEY,
-    { expiresIn: "1h" }
+    { expiresIn: "14d" }
   );
 };

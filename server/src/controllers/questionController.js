@@ -1,12 +1,19 @@
 const Answer = require("../models/answerModel");
 const Question = require("../models/questionModal");
 const BookMark = require("../models/bookmarkAnswerModel");
+const apiFeatures = require("../utils/apiFeatures");
 
 exports.getQuestions = async (req, res) => {
   try {
-    const allQuestion = await Question.find({}).populate([
-      { path: "userId", select: ["name"] },
-    ]);
+    const allQuestion = await new apiFeatures(
+      Question.find({}).populate([
+        { path: "userId", select: ["firstName", "lastName"] },
+      ]),
+      req.query
+    )
+      .sort()
+      .pagination().query;
+
     const questionCount = await Question.countDocuments({}).exec();
     return res
       .status(201)
@@ -26,7 +33,9 @@ exports.getQuestionById = async (req, res) => {
       return res.status(400).json({ error: "missing input" });
     }
 
-    const questionDetail = await Question.findById({ _id: questionId });
+    const questionDetail = await Question.findById({
+      _id: questionId,
+    }).populate([{ path: "userId", select: ["firstName", "lastName"] }]);
 
     const answersOfQuestion = await Answer.find({ questionId: questionId });
 

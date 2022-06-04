@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import userInstance from "../../axios/userInstance";
 
@@ -7,8 +7,9 @@ import userInstance from "../../axios/userInstance";
 import { useDispatch } from "react-redux";
 import { signIn } from "../../store/actions/authActions";
 
+//import {GoogleLogin} from "react-google-login";
+
 const Login = () => {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [userDetails, setUserDetails] = useState({
@@ -31,6 +32,29 @@ const Login = () => {
       console.log(err);
     }
   };
+
+  // const handleGoogleLogin = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const loginRespose = await userInstance.get("/sign");
+
+  //     console.log(loginRespose);
+  //   } catch (err) {
+  //     console.log(err.message);
+  //   }
+  // };
+
+  // const onSuccess = async (res) => {
+  //   try {
+  //     const result=  await userInstance.post("/login", {
+  //       token: res?.tokenId,
+  //     });
+
+  //     console.log(result)
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
   return (
     <div className="login-outer-section d-flex align-items-center justify-content-center">
@@ -92,11 +116,20 @@ const Login = () => {
                 >
                   Google
                 </button>
+
+                {/* <a href="http://localhost:5000/api/user/v1/auth/google">
+                  login
+                </a>
+                <GoogleLogin
+                  clientId={`632118201692-mp9f55iirs4hg2ihm6d4ot5udif1irok.apps.googleusercontent.com`}
+                  onSuccess={onSuccess}
+                  onFailure={(e,err)=>console.log(err)}
+                /> */}
               </div>
             </form>
           </section>
           <small className="login-bottom-text">
-            By clicking Log In, Facebook or LinkedIn you agree to our new T&C's
+            By clicking Log In, Facebook or Google you agree to our new T&C's
           </small>
         </div>
       </section>

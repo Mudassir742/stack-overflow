@@ -1,5 +1,7 @@
-const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
+
+const User = require("../models/userModel");
+
 const { generateToken } = require("../utils/generateToken");
 
 exports.userLogin = async (req, res) => {
@@ -40,6 +42,52 @@ exports.userLogin = async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
+
+// exports.loginWithGoogle = async (req, res) => {
+//   try {
+//     const { email, password, firstName, lastName, profileId } = req.user;
+
+//     if (!email || !password) {
+//       return res.status(400).json({ error: "fields are empty" });
+//     }
+
+//     const existedUser = await User.findOne({
+//       email: email,
+//       profileId: profileId,
+//     });
+
+//     let saveUser;
+//     if (!existedUser) {
+//       const newUser = new User({
+//         email,
+//         firstName,
+//         lastName,
+//         password,
+//         profileId,
+//       });
+//       saveUser = await newUser.save();
+//     }
+//     console.log(existedUser)
+//     console.log(saveUser)
+
+//     const tokenUser = existedUser ? existedUser : saveUser;
+
+//     const token = generateToken(tokenUser);
+
+//     return res.status(201).json({
+//       data: {
+//         name: firstName + " " + lastName,
+//         email: email,
+//         userID: existedUser ? existedUser._id : saveUser._id,
+//         token: token,
+//       },
+//     });
+//   } catch (err) {
+//     console.log(err.message);
+//     return res.status(500).json({ error: err.message });
+//   }
+// };
+
 exports.userRegister = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
@@ -113,14 +161,14 @@ exports.editProfile = async (req, res) => {
       return res.status(400).json({ error: "fields are empty" });
     }
 
-    const isEmailAlreadyExists = await User.find({ email: email });
-
-    if (isEmailAlreadyExists.length === 0) {
+    const isEmailAlreadyExists = await User.findOne({ email: email });
+    console.log(isEmailAlreadyExists)
+    if (!isEmailAlreadyExists) {
       return res.status(422).json({ error: "user not found" });
     }
 
     await User.updateOne(
-      { _id: req.user.id, email: email },
+      { email: email },
       { $set: { firstName: firstName, lastName: lastName } }
     );
 
